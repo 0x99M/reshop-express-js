@@ -1,4 +1,4 @@
-import { Product } from '../models';
+import { Product } from '../models/index.js';
 
 export function createProduct(req, res) {
   Product.create(req.body)

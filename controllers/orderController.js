@@ -1,4 +1,4 @@
-import { Order, Product } from '../models';
+import { Order, Product } from '../models/index.js';
 
 export function createOrder(req, res) {
   const { products } = req.body;
@@ -55,7 +55,7 @@ export function createOrder(req, res) {
 }
 
 export function getAllOrders(req, res) {
-  Order.findAll({ include: Product })
+  Order.findAll()
     .then(orders => res.json(orders))
     .catch(err => res.status(500).json({ error: err.message }));
 }

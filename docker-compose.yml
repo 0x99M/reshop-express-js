@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_USERNAME=reshop
+      - DB_PASSWORD=reshop12345
+      - DB_NAME=reshopdb
+      - DB_HOST=db
+      - DB_PORT=5432
+      - NODE_ENV=development
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh -c "npm run migrate && npm run seed && npm run dev"
+
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: reshop
+      POSTGRES_PASSWORD: reshop12345
+      POSTGRES_DB: reshopdb
+    ports:
+      - "5432:5432"
