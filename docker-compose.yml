@@ -12,6 +12,8 @@ services:
       - DB_HOST=db
       - DB_PORT=5432
       - NODE_ENV=development
+      - JWT_SECRET=reshop_jwt
+      - JWT_EXPIRES_IN=1h
     depends_on:
       - db
     volumes:

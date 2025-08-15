@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import { sequelize } from './models/index.js';
 import productRoutes from './routes/productRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ const app = express();
 
 app.use(helmet(), compression(), morgan('combined'), express.json());
 
+app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 
