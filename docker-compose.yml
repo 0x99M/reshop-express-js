@@ -22,7 +22,7 @@ services:
     command: sh -c "npm run migrate && npm run seed && npm run dev"
 
   db:
-    image: postgres:16
+    image: postgres
     restart: always
     environment:
       POSTGRES_USER: reshop

@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
@@ -11,6 +12,11 @@ import authRoutes from './routes/authRoutes.js';
 dotenv.config();
 
 const app = express();
+
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+}));
 
 app.use(helmet(), compression(), morgan('combined'), express.json());
 

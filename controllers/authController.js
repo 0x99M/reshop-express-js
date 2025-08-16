@@ -1,19 +1,20 @@
 import jwt from 'jsonwebtoken';
-import { findUser } from '../middleware/auth.js';
+import bcrypt from 'bcrypt';
+import { findUserByUsername } from '../middleware/auth.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
 
-export const login = (req, res) => {
+export const login = async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
     return res.status(400).json({ error: 'Username and password are required' });
   }
 
-  const user = findUser(username, password);
-  
-  if (!user) {
+  const user = findUserByUsername(username);
+
+  if (!user || !(await bcrypt.compare(password, user.password))) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
 
