@@ -19,4 +19,7 @@ const Product = ProductModel(sequelize, DataTypes);
 const Order = OrderModel(sequelize, DataTypes);
 const OrderProduct = OrderProductModel(sequelize, DataTypes);
 
+Product.associate?.({ Order, OrderProduct });
+Order.associate?.({ Product, OrderProduct });
+
 export { Product, Order, OrderProduct, sequelize };

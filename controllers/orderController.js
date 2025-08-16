@@ -1,7 +1,8 @@
 import { Order, OrderProduct, Product } from '../models/index.js';
+import { sequelize } from '../models/index.js';
 
-export function createOrder(req, res) {
-  const { products } = req.body;
+export function placeOrder(req, res) {
+  const products = req.body;
 
   if (!products || !Array.isArray(products) || products.length === 0) {
     return res.status(400).json({ error: 'At least one product is required' });
@@ -11,7 +12,7 @@ export function createOrder(req, res) {
   let orderProducts = [];
 
   sequelize.transaction(t => {
-    const productIds = products.map(p => p.id);
+    const productIds = products.map(p => p.productId);
     return Product.findAll({ where: { id: productIds }, transaction: t })
       .then(foundProducts => {
         if (foundProducts.length !== products.length) {
@@ -23,11 +24,11 @@ export function createOrder(req, res) {
         const productMap = new Map(foundProducts.map(p => [p.id, p]));
 
         orderProducts = products.map(p => {
-          const product = productMap.get(p.id);
+          const product = productMap.get(p.productId);
           const quantity = p.quantity || 1;
           calculatedTotalPrice += product.price * quantity;
           return {
-            id: p.id,
+            productId: p.productId,
             quantity,
           };
         });
@@ -36,7 +37,7 @@ export function createOrder(req, res) {
       })
       .then(order => {
         const orderProductAssociations = orderProducts.map(p => ({
-          productId: p.id,
+          productId: p.productId,
           quantity: p.quantity,
           orderId: order.id
         }));
@@ -45,13 +46,13 @@ export function createOrder(req, res) {
           orderProductAssociations.map(assoc => assoc.productId),
           { through: orderProductAssociations, transaction: t }
         )
-        .then(() => order);
+          .then(() => order);
       });
   })
-  .then(order => res.status(201).json(order))
-  .catch(err => {
-    res.status(400).json({ error: err.message });
-  });
+    .then(order => res.status(201).json(order))
+    .catch(err => {
+      res.status(400).json({ error: err.message });
+    });
 }
 
 export function getAllOrders(req, res) {
@@ -74,7 +75,7 @@ export function getOrderById(req, res) {
 export function getOrderProducts(req, res) {
   OrderProduct.findAll({ where: { orderId: req.params.orderId } })
     .then(orderProducts => res.json(orderProducts))
-    .catch(err => res.status(500).json({ error: err.message })); 
+    .catch(err => res.status(500).json({ error: err.message }));
 }
 
 export function updateOrder(req, res) {
