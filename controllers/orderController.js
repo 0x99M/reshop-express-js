@@ -1,4 +1,4 @@
-import { Order, Product } from '../models/index.js';
+import { Order, OrderProduct, Product } from '../models/index.js';
 
 export function createOrder(req, res) {
   const { products } = req.body;
@@ -61,7 +61,7 @@ export function getAllOrders(req, res) {
 }
 
 export function getOrderById(req, res) {
-  Order.findByPk(req.params.id, { include: Product })
+  Order.findByPk(req.params.id)
     .then(order => {
       if (!order) {
         return res.status(404).json({ error: 'Not found' });
@@ -69,6 +69,12 @@ export function getOrderById(req, res) {
       res.json(order);
     })
     .catch(err => res.status(500).json({ error: err.message }));
+}
+
+export function getOrderProducts(req, res) {
+  OrderProduct.findAll({ where: { orderId: req.params.orderId } })
+    .then(orderProducts => res.json(orderProducts))
+    .catch(err => res.status(500).json({ error: err.message })); 
 }
 
 export function updateOrder(req, res) {
