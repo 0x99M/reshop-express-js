@@ -36,18 +36,15 @@ export function placeOrder(req, res) {
         return Order.create({ totalPrice: calculatedTotalPrice }, { transaction: t });
       })
       .then(order => {
-        const orderProductAssociations = orderProducts.map(p => ({
-          productId: p.productId,
-          quantity: p.quantity,
-          orderId: order.id
+        const rows = orderProducts.map(op => ({
+          orderId: order.id,
+          productId: op.productId,
+          quantity: op.quantity
         }));
 
-        return order.addProducts(
-          orderProductAssociations.map(assoc => assoc.productId),
-          { through: orderProductAssociations, transaction: t }
-        )
+        return OrderProduct.bulkCreate(rows, { transaction: t })
           .then(() => order);
-      });
+      })
   })
     .then(order => res.status(201).json(order))
     .catch(err => {
