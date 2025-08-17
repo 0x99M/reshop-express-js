@@ -50,30 +50,59 @@ These instructions will get you a copy of the project up and running on your loc
     *   `JWT_SECRET`: A strong secret key for signing JWT tokens.
     *   `JWT_EXPIRES_IN`: Expiration time for JWT tokens (e.g., `1h`, `24h`).
 
-### Database Setup
+### Testing with Docker
 
-1.  Ensure your PostgreSQL server is running and create a database matching the name specified in your `.env` file.
-2.  Apply database migrations to set up the initial schema:
+This project includes Docker configurations for easy testing and deployment. The setup consists of two services:
+
+1. **app**: The Express.js application
+2. **db**: A PostgreSQL database
+
+#### Prerequisites for Docker Testing
+
+*   [Docker](https://docs.docker.com/get-docker/)
+*   [Docker Compose](https://docs.docker.com/compose/install/)
+
+#### Environment Configuration for Docker
+
+1.  Create a `.env` file from the example:
     ```bash
-    npm run migrate
+    cp .example.env .env
     ```
-3.  (Optional) Seed the database with initial data:
+2.  Edit the `.env` file and provide values for all variables:
+    *   `DB_USERNAME`: Database username (also used for PostgreSQL container)
+    *   `DB_PASSWORD`: Database password (also used for PostgreSQL container)
+    *   `DB_NAME`: Database name (also used for PostgreSQL container)
+    *   `DB_HOST`: Set to `db` (the service name in docker-compose.yml)
+    *   `DB_PORT`: Set to `5432` (PostgreSQL default port)
+    *   `NODE_ENV`: Set to `development` or `production`
+    *   `JWT_SECRET`: A strong secret key for signing JWT tokens
+    *   `JWT_EXPIRES_IN`: Expiration time for JWT tokens (e.g., `1h`, `24h`)
+
+#### Running with Docker Compose
+
+1.  Ensure you have configured your `.env` file as described above.
+2.  Build and start the services:
     ```bash
-    npm run seed
+    docker-compose up --build
     ```
 
-### Running the Application
+This command will:
+*   Build the application Docker image
+*   Start the PostgreSQL database container
+*   Run database migrations
+*   Seed the database with initial data
+*   Start the application in development mode with auto-reload
 
-*   **Start the server in production mode:**
-    ```bash
-    npm start
-    ```
-*   **Start the server in development mode (with auto-reload):**
-    ```bash
-    npm run dev
-    ```
+The application will be accessible at `http://localhost:3000`, and the database will be accessible on port `5432`.
 
-The server will be accessible at `http://localhost:3000`.
+#### Stopping the Services
+
+To stop the services, press `Ctrl+C` in the terminal where `docker-compose up` is running, or run:
+```bash
+docker-compose down
+```
+
+This will stop and remove the containers, networks, and volumes created by `docker-compose up`.
 
 ## API Endpoints
 
