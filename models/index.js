@@ -9,31 +9,10 @@ const env = _env.NODE_ENV || 'development';
 const config = configjs[env];
 
 let sequelize;
-
 if (config.use_env_variable) {
-  sequelize = new Sequelize(_env[config.use_env_variable], {
-    ...config,
-    dialect: "postgres",
-    protocol: "postgres",
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
-  });
+  sequelize = new Sequelize(_env[config.use_env_variable], config);
 } else {
-  sequelize = new Sequelize(config.database, config.username, config.password, {
-    ...config,
-    dialect: "postgres",
-    protocol: "postgres",
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
-  });
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
 const Product = ProductModel(sequelize, DataTypes);
