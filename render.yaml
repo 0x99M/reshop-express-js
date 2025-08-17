@@ -1,4 +1,3 @@
-# render.yaml
 version: "1"
 
 services:
@@ -8,7 +7,7 @@ services:
     plan: starter
     region: oregon
     envVars:
-      - key: localhost
+      - key: DATABASE_URL
         fromDatabase:
           name: reshop-db
           property: connectionString
@@ -24,3 +23,4 @@ databases:
     databaseName: reshopdb
     user: reshop
     plan: starter
+    region: oregon
