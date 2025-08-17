@@ -1,0 +1,26 @@
+# render.yaml
+version: "1"
+
+services:
+  - type: web
+    name: reshop-backend
+    runtime: docker
+    plan: starter
+    region: oregon
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: reshop-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 1h
+
+databases:
+  - name: reshop-db
+    databaseName: reshopdb
+    user: reshop
+    plan: starter
