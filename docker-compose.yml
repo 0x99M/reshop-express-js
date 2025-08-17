@@ -6,14 +6,14 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DB_USERNAME=reshop
-      - DB_PASSWORD=reshop12345
-      - DB_NAME=reshopdb
-      - DB_HOST=db
-      - DB_PORT=5432
-      - NODE_ENV=development
-      - JWT_SECRET=reshop_jwt
-      - JWT_EXPIRES_IN=1h
+      - DB_USERNAME
+      - DB_PASSWORD
+      - DB_NAME
+      - DB_HOST
+      - DB_PORT
+      - NODE_ENV
+      - JWT_SECRET
+      - JWT_EXPIRES_IN
     depends_on:
       - db
     volumes:
@@ -25,8 +25,8 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_USER: reshop
-      POSTGRES_PASSWORD: reshop12345
-      POSTGRES_DB: reshopdb
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
